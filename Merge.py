@@ -20,7 +20,7 @@ for i in range(len(destina)):
     for j in l:
         for a in range(len(file1.index)):
             if int(file1[0][a])==int(j):
-                df.set_value(a, 4,mail[i] )
+                df.set_value(a, 4,mail[i][0] )
     
 df.to_csv('new_training_info.csv', sep=',',header=False)
 
