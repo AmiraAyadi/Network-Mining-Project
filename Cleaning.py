@@ -7,7 +7,7 @@ import re, string
 import pandas
 from emails import *
 import datetime
-from dateutil import parser
+from dateutil.parser import *
 #dt = parser.parse("Aug 28 1999 12:00AM")
 
 
@@ -41,12 +41,25 @@ for row in reader:
     #expediteurs_list.append(row[4])
 
 #(DATE)
+<<<<<<< HEAD
 """
 year
 month
 days
 isoweekday()
 """
+=======
+year_date_list = []
+month_date_list = []
+day_date_list = []
+weekday_date_list = []
+for i in range(0,len(date_list)):
+    dt = parse(date_list[i])
+    year_date_list.append(dt.year)
+    month_date_list.append(dt.month)
+    day_date_list.append(dt.day)
+    weekday_date_list.append(dt.isoweekday())
+>>>>>>> origin/master
 
 
 
@@ -61,11 +74,10 @@ for email in body_list:
     body_clean_list.append([str.lower(word) for word in str.split(email) if (str.lower(word) not in stopwords.words('english'))])
 
 email_list = []    
-for i in range(0,len(id_list)):
-    email_list[i] = Email(id_list[i], date_list[i], body_list[i], destinataires_list[i], "")
+for i in range(0,len(id_list)-1):
+    email_list[i] = Email(id_list[i], date_list[i], body_list[i], destinataires_list[i],"")
     print(body_list[i])
 
-    
     
     
 
