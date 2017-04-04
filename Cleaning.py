@@ -40,13 +40,17 @@ for row in reader:
     destinataires_list.append(row[3])
     #expediteurs_list.append(row[4])
 
-#TODO (DATE)
-"""
-year
-month
-days
-isoweekday()
-"""
+#(DATE)
+year_date_list = []
+month_date_list = []
+day_date_list = []
+weekday_date_list = []
+for i in date_list:
+    dt = parse(date_list[i])
+    year_date_list.append(dt.year)
+    month_date_list.append(dt.month)
+    day_date_list.append(dt.day)
+    weekday_date_list.append(dt.isoweekday())
 
 """
 On nettoie le text brut pour simplifier le utilisation de l'algorithme de Machine Learning (après)
