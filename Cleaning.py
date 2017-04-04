@@ -76,7 +76,7 @@ print(len(body_list))
 print(len(destinataires_list))
 print(len(id_list)-len(date_list))
 for i in range(0,len(id_list)):
-    email_list.append(Email(id_list[i], date_list[i], body_list[i], destinataires_list[i],""))
+    email_list.append(Email(ID_mail=id_list[i], text=body_list[i], date=date_list[i], destinataires=destinataires_list[i],expediteurs=""))
     # print("############## ID_LIST ##############")
     # print(id_list[i])  
     # print("############## BODY_LIST ##############")
@@ -92,11 +92,13 @@ for i in range(0,len(id_list)):
     print("##############") 
 """
 
-    
+print(*email_list[0].text)
+print(type(*email_list[1].text))
+
 for email in email_list:
-    email['text'] = steamer.clean(email['text'])
-    email['tokenise'] = steamer.removeStopWords(this.tokenise(email['text']))
-    print(email['tokenise'])
+    email.text = steamer.clean(*email.text)
+    email.tokenise = steamer.removeStopWords(steamer.tokenise(email.text))
+    print(email.tokenise)
     print("#############################")
 
     
@@ -104,13 +106,3 @@ for email in email_list:
 pd = pandas.DataFrame(id_list, date_list, destinataires_list, body_clean_list)
 pd.to_csv("out.csv")
 """
-
-
-        
-    
-    
-    
-    
-    
-    
-    
