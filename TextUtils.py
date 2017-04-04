@@ -2,11 +2,11 @@ from stemming.porter2 import stem
 import re
 from sklearn.feature_extraction.text import TfidfTransformer
 
-class Ranking:
-    vectorKeywordIndex = []
-    documentVectors = []
+class Steamer:
+    #vectorKeywordIndex = []
+    #documentVectors = []
     def __init__(self):
-        self.stopwords= open('SmartStoplist.txt','r').read().split()
+        self.stopwords= open('./doc/SmartStoplist.txt','r').read().split()
         
     #1/Tronquer les mots (stemming)
     def clean(self, string):
@@ -17,6 +17,7 @@ class Ranking:
         string = string.replace("\s+"," ")
         string = string.lower()
         return string
+    
     def tokenise(self, string):
         """ break string up into tokens and stem words """
         string = self.clean(string)

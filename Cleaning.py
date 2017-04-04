@@ -8,6 +8,7 @@ import pandas
 from emails import *
 import datetime
 from dateutil.parser import *
+from TextUtils import *
 #dt = parser.parse("Aug 28 1999 12:00AM")
 
 
@@ -20,7 +21,7 @@ On l'a fait pour minimiser les temps du execution
 """
 f = open('./Datasets/training_info_sid_min.csv', 'r')
 reader = csv.reader(f, delimiter=',', quotechar='"')
-
+steamer = Steamer()
 
 
 """
@@ -59,10 +60,6 @@ for i in range(0,len(date_list)):
     weekday_date_list.append(dt.isoweekday())
 
 
-
-
-
-
 """
 On nettoie le text brut pour simplifier le utilisation de l'algorithme de Machine Learning (après)
 la sortie c'est une liste de mots en minuscule sans les stopwords
@@ -88,26 +85,22 @@ for i in range(0,len(id_list)):
     # print(date_list[i])
     # print("############## DESTINATAIRES_LIST ##############")
     # print(destinataires_list[i])
-
+"""
 for i in range(0,len(id_list)):
     email_list.append(Email(id_list[i], date_list[i], body_clean_list[i], destinataires_list[i],""))
     print(body_clean_list[i])
-    print("##############")
-
-
-    
-    
-
+    print("##############") 
 """
-for email in body_clean_list:
-    print(*email)
-    print("#######################################################")
+
+    
+for email in email_list:
+    email['text'] = steamer.clean(email['text'])
+    email['tokenise'] = steamer.removeStopWords(this.tokenise(email['text']))
+    print(email['tokenise'])
+    print("#############################")
+
+    
 """    
-
-
-
-
-"""
 pd = pandas.DataFrame(id_list, date_list, destinataires_list, body_clean_list)
 pd.to_csv("out.csv")
 """
