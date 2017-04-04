@@ -64,6 +64,8 @@ for i in range(0,len(date_list)):
 
 
 
+
+
 """
 On nettoie le text brut pour simplifier le utilisation de l'algorithme de Machine Learning (après)
 la sortie c'est une liste de mots en minuscule sans les stopwords
@@ -74,9 +76,27 @@ for email in body_list:
     body_clean_list.append([str.lower(word) for word in str.split(email) if (str.lower(word) not in stopwords.words('english'))])
 
 email_list = []    
-for i in range(0,len(id_list)-1):
-    email_list[i] = Email(id_list[i], date_list[i], body_list[i], destinataires_list[i],"")
-    print(body_list[i])
+print(len(id_list))
+print(len(date_list))
+print(len(body_list))
+print(len(destinataires_list))
+print(len(id_list)-len(date_list))
+for i in range(0,len(id_list)):
+    email_list.append(Email(id_list[i], date_list[i], body_list[i], destinataires_list[i],""))
+    # print("############## ID_LIST ##############")
+    # print(id_list[i])  
+    # print("############## BODY_LIST ##############")
+    # print(body_list[i])
+    # print("############## DATE_LIST ##############")
+    # print(date_list[i])
+    # print("############## DESTINATAIRES_LIST ##############")
+    # print(destinataires_list[i])
+
+for i in range(0,len(id_list)):
+    email_list.append(Email(id_list[i], date_list[i], body_clean_list[i], destinataires_list[i],""))
+    print(body_clean_list[i])
+    print("##############")
+
 
     
     
