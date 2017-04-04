@@ -41,14 +41,12 @@ for row in reader:
     #expediteurs_list.append(row[4])
 
 #(DATE)
-<<<<<<< HEAD
 """
 year
 month
 days
 isoweekday()
 """
-=======
 year_date_list = []
 month_date_list = []
 day_date_list = []
@@ -59,7 +57,6 @@ for i in range(0,len(date_list)):
     month_date_list.append(dt.month)
     day_date_list.append(dt.day)
     weekday_date_list.append(dt.isoweekday())
->>>>>>> origin/master
 
 
 
