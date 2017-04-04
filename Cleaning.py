@@ -40,13 +40,16 @@ for row in reader:
     destinataires_list.append(row[3])
     #expediteurs_list.append(row[4])
 
-#TODO (DATE)
+#(DATE)
 """
 year
 month
 days
 isoweekday()
 """
+
+
+
 
 """
 On nettoie le text brut pour simplifier le utilisation de l'algorithme de Machine Learning (après)
