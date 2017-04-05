@@ -7,8 +7,14 @@ class Email:
         self.expediteurs = expediteurs
         self.tokenise = None
     def print(self):
-        print(self.ID_mail +"################################")
-        print(self.date)
-        print(self.destinataires)
-        print(self.text)
-        print(self.tokenise)
+        print("ID: " + str(*self.ID_mail) + "################################")
+        print(str(self.date))
+        print("_____________________________")
+        print(str(self.destinataires))
+        print("_____________________________")
+        print(str(self.expediteurs))
+        print("_____________________________")
+        print(str(self.text))
+        print("_____________________________")
+        print(str(self.tokenise))
+        print("\n")
