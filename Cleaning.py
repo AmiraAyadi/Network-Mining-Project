@@ -15,7 +15,7 @@ from TextUtils import *
 training_info_sid_min.csv C'est un fichier qui est un extrait du fichier training_info_sid.csv
 On l'a fait pour minimiser les temps du execution
 """
-f = open('./Datasets/training_info_sid_min.csv', 'r')
+f = open('./Datasets/new_training_info.csv', 'r')
 reader = csv.reader(f, delimiter=',', quotechar='"')
 steamer = Steamer()
 
@@ -34,11 +34,11 @@ body_list = []
 destinataires_list = []
 expediteurs_list = []
 for row in reader:
-    id_list.append(row[0])
-    date_list.append(row[1])
-    body_list.append(row[2])
-    destinataires_list.append(row[3])
-    #expediteurs_list.append(row[4])
+    id_list.append(row[1])
+    date_list.append(row[2])
+    body_list.append(row[3])
+    destinataires_list.append(row[4])
+    expediteurs_list.append(row[5])
 
 #(DATE)
 """
@@ -49,6 +49,12 @@ month_date_list = []
 day_date_list = []
 weekday_date_list = []
 for i in range(0,len(date_list)):
+    #DEBUG
+    #print(str(id_list[i]), " ")
+    #print(date_list[i])
+    if(date_list[i] == ""):
+        continue
+        
     dt = parse(date_list[i])
     year_date_list.append(dt.year)
     month_date_list.append(dt.month)
@@ -60,7 +66,7 @@ Initialisation des emails
 """
 email_list = []    
 for i in range(0,len(id_list)):
-    email_list.append(Email(ID_mail=id_list[i], text=body_list[i], date=date_list[i], destinataires=destinataires_list[i],expediteurs=""))
+    email_list.append(Email(ID_mail=id_list[i], text=body_list[i], date=date_list[i], destinataires=destinataires_list[i],expediteurs=expediteurs_list[i].split()))
 
 """
 Nettoyage des emails (le text nettoyé s'est mis sur email.tokenise comme un vecteur des mots)
