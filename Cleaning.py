@@ -11,10 +11,6 @@ from dateutil.parser import *
 from TextUtils import *
 #dt = parser.parse("Aug 28 1999 12:00AM")
 
-
-def remove_punctuation ( text ):
-    return re.sub('[%s]' % re.escape(string.punctuation), ' ', text)
-
 """
 training_info_sid_min.csv C'est un fichier qui est un extrait du fichier training_info_sid.csv
 On l'a fait pour minimiser les temps du execution
@@ -30,6 +26,9 @@ On mettre le text brut du fichier CSV (colonne 2) dans une list (body_list)
 id_list = []
 date_list = []
 
+"""
+Initialisation des listes des champs pour email
+"""
 
 body_list = []
 destinataires_list = []
@@ -43,10 +42,7 @@ for row in reader:
 
 #(DATE)
 """
-year
-month
-days
-isoweekday()
+Initialisation de la date:
 """
 year_date_list = []
 month_date_list = []
@@ -59,50 +55,22 @@ for i in range(0,len(date_list)):
     day_date_list.append(dt.day)
     weekday_date_list.append(dt.isoweekday())
 
-
 """
-On nettoie le text brut pour simplifier le utilisation de l'algorithme de Machine Learning (après)
-la sortie c'est une liste de mots en minuscule sans les stopwords
+Initialisation des emails
 """
-body_clean_list = []
-for email in body_list:
-    email = remove_punctuation(email)
-    body_clean_list.append([str.lower(word) for word in str.split(email) if (str.lower(word) not in stopwords.words('english'))])
-
 email_list = []    
-print(len(id_list))
-print(len(date_list))
-print(len(body_list))
-print(len(destinataires_list))
-print(len(id_list)-len(date_list))
 for i in range(0,len(id_list)):
     email_list.append(Email(ID_mail=id_list[i], text=body_list[i], date=date_list[i], destinataires=destinataires_list[i],expediteurs=""))
-    # print("############## ID_LIST ##############")
-    # print(id_list[i])  
-    # print("############## BODY_LIST ##############")
-    # print(body_list[i])
-    # print("############## DATE_LIST ##############")
-    # print(date_list[i])
-    # print("############## DESTINATAIRES_LIST ##############")
-    # print(destinataires_list[i])
-"""
-for i in range(0,len(id_list)):
-    email_list.append(Email(id_list[i], date_list[i], body_clean_list[i], destinataires_list[i],""))
-    print(body_clean_list[i])
-    print("##############") 
-"""
 
-print(*email_list[0].text)
-print(type(*email_list[1].text))
-
+"""
+Nettoyage des emails (le text nettoyé s'est mis sur email.tokenise comme un vecteur des mots)
+"""
 for email in email_list:
     email.text = steamer.clean(*email.text)
     email.tokenise = steamer.removeStopWords(steamer.tokenise(email.text))
-    print(email.tokenise)
-    print("#############################")
+    email.print()
 
-    
-"""    
+"""
 pd = pandas.DataFrame(id_list, date_list, destinataires_list, body_clean_list)
 pd.to_csv("out.csv")
-"""
+"""                                         
