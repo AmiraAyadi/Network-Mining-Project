@@ -50,7 +50,7 @@ day_date_list = []
 weekday_date_list = []
 for i in range(0,len(date_list)):
     #DEBUG
-    #print(str(id_list[i]), " ")
+    #print(str(id_list[i]), " ") 
     #print(date_list[i]) 
     
     #If there's not date
