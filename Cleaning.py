@@ -18,7 +18,7 @@ training_info_sid_min.csv C'est un fichier qui est un extrait du fichier trainin
 On l'a fait pour minimiser les temps du execution
 """
 f = open('./Datasets/new_training_info_min.csv', 'r')
-t = open('./Datasets/test_info_sid.csv', 'r')
+t = open('./Datasets/new_training_info_min.csv', 'r')
 
 reader_train = csv.reader(f, delimiter=',', quotechar='"')
 reader_test = csv.reader(t, delimiter=',', quotechar='"')
@@ -201,7 +201,7 @@ y_destinataires = [str(email.destinataires) for email in y_email_list]
 y_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(), email.date[0].day] for email in y_email_list]
 #print(dates)
 
-vtfidf_maker_body.getVectorKeywordIndex(y_documents)
+y_tfidf_maker_body.getVectorKeywordIndex(y_documents)
 y_tfidf_maker_body.matrixVector(y_documents)
 
 y_tfidf_maker_expediteurs.getVectorKeywordIndex(y_expediteurs)
@@ -256,10 +256,15 @@ classif.fit(X, y)
 X_TEST = y_matrix_data
 y_TEST = y_matrix_class
 
+y_TEST = binarizer.transform(y_TEST)
+print(X_TEST[1])
 
-
-
-
+print("realidad")
+print(y_TEST[1])
+print("prediccion")
+y_PRED = classif.predict(X_TEST[1].reshape(1,-1))
+print(y_PRED)
+print(sum(y_TEST[1] - y_PRED))
 
 
 

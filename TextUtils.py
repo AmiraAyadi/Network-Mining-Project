@@ -87,4 +87,4 @@ class DocTransformer:
         transformer = TfidfTransformer(smooth_idf=True)
         tfidf = transformer.fit_transform(matrix)       
         self.documentVectors = tfidf.toarray().tolist()
-        print("Matrice des vecteurs de chaque paragraphe du document crée")
+        #print("Matrice des vecteurs de chaque paragraphe du document crée")
