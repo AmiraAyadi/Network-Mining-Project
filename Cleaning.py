@@ -272,11 +272,13 @@ print("#@#"*30)
 def vect2email(dictionary, vect):
     index = [i for i, x in enumerate(vect) if x == 1]
     inv_dictionary = {v: k for k, v in dictionary.items()}
-    email_list = ivd = {v: k for k, v in d.items()}
-
+    email_list = []
+    for i in index:
+        email_list.append(inv_dictionary[i])
+    return(email_list)
     
 email_dictionary = x_expediteurs_vector_keyword.vectorKeywordIndex
-print(type(email_dictionary))
+print(email_dictionary)
 
 email_vect = vect2email(email_dictionary, y_PRED)
 print(email_dictionary)
