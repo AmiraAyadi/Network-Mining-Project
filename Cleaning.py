@@ -87,41 +87,56 @@ Initialisation pour TFIDF:
 
 tfidf_maker_body = DocTransformer()
 tfidf_maker_expediteurs = DocTransformer()
+tfidf_maker_destinataires = DocTransformer()
+
 documents = [email.text  for email in email_list]
 expediteurs = [str(email.expediteurs) for email in email_list]
+destinataires = [str(email.destinataires) for email in email_list]
 dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(), email.date[0].day] for email in email_list]
 #print(dates)
 
 tfidf_maker_body.getVectorKeywordIndex(documents)
 tfidf_maker_body.matrixVector(documents)
+
 tfidf_maker_expediteurs.getVectorKeywordIndex(expediteurs)
 expediteurs_vector_keyword = tfidf_maker_expediteurs
 #{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
+tfidf_maker_expediteurs.matrixVector(expediteurs)
+
+tfidf_maker_destinataires.getVectorKeywordIndex(destinataires)
+tfidf_maker_destinataires.matrixVector(destinataires)
+
+matrix_tfidf_body = tfidf_maker_body.documentVectors
+matrix_tfidf_expediteurs = tfidf_maker_expediteurs.documentVectors
+matrix_tfidf_destinataires = tfidf_maker_destinataires.documentVectors
+
+tfidf_maker_destinataires.printVectorKeywordIndex()
+
+for row in matrix_tfidf_destinataires:
+    print(row)
+#print(sum(matrix_tfidf_body[1]))
+#print(sum(matrix_tfidf_destinataires[1]))
+print("########")
 
 
+matrix_data = []
+matrix_class = []
+for i in range(len(matrix_tfidf_body)):
+    matrix_data.append(np.concatenate((matrix_tfidf_body[i],matrix_tfidf_expediteurs[i],dates[i])))
+
+print(matrix_data[1])
+#[    0.     0.     0. ...,  2012.     3.    12.]
+
+
+
+
+
+"""
 print(expediteurs)
 print("#"*20)
 tfidf_maker_expediteurs.printVectorKeywordIndex()
 print(tfidf_maker_expediteurs.vectorKeywordIndex["monicahanley@univ"])
-
-tfidf_maker_expediteurs.matrixVector(expediteurs)
-matrix_tfidf_body = tfidf_maker_body.documentVectors
-matrix_tfidf_expediteurs_doc = tfidf_maker_expediteurs.documentVectors
-
-
-#for row in matrix_tfidf_expediteurs:
-#    print(row)
-#print(sum(matrix_tfidf_body[1]))
-#print(sum(matrix_tfidf_expediteurs[1]))
-#print("########")
-matrix_data = []
-for i in range(len(matrix_tfidf_body)):
-    matrix_data.append(np.concatenate((matrix_tfidf_body[i],matrix_tfidf_expediteurs_doc[i],dates[i])))
-
-#print(matrix_data[1])
-
-
-
+"""
 
 
 
