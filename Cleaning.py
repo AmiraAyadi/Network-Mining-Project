@@ -10,6 +10,13 @@ import datetime
 from dateutil.parser import *
 from TextUtils import *
 
+def vect2email(dictionary, vect):
+    index = [i for i, x in enumerate(vect) if x == 1]
+    inv_dictionary = {v: k for k, v in dictionary.items()}
+    email_list = []
+    for i in index:
+        email_list.append(inv_dictionary[i])
+    return(email_list)
 
 #dt = parser.parse("Aug 28 1999 12:00AM")
 
@@ -167,8 +174,8 @@ x_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(),
 Taken vocabulary
 """
 x_tfidf_maker_body.getVectorKeywordIndex(x_documents)
-x_tfidf_maker_expediteurs.getVectorKeywordIndex(x_expediteurs + x_destinataires)
-x_tfidf_maker_destinataires.getVectorKeywordIndex(x_expediteurs + x_destinataires)
+x_tfidf_maker_expediteurs.getVectorKeywordIndex(x_expediteurs + x_destinataires, clean=False)
+x_tfidf_maker_destinataires.getVectorKeywordIndex(x_expediteurs + x_destinataires, clean=False)
 x_expediteurs_vector_keyword = x_tfidf_maker_expediteurs #Rename
 #{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
 x_destinataires_vector_keyword = x_tfidf_maker_destinataires #Rename
@@ -244,10 +251,9 @@ y = x_matrix_class
 
 X = np.array(X)
 y = np.array(y)
-print("#######################")
-print("len(y[1])")
-print(len(y[1]))
-print("#######################")
+for h in range(len(y)):
+    print([i for i, x in enumerate(y[h]) if x == 1])
+
 binarizer = preprocessing.Binarizer()
 y = binarizer.transform(y)
 
@@ -262,39 +268,47 @@ print("Classif Fit [OK]")
 
 X_TEST = y_matrix_data
 X_TEST = np.array(X_TEST)
-
-print(X_TEST[1])
-
-print("prediccion")
-y_PRED = classif.predict(X_TEST[1].reshape(1,-1))
-print(y_PRED)
-print("#@#"*30)
-print(type(y_PRED))
-y_PRED = y_PRED.tolist()
-y_PRED = y_PRED[0]
-print(y_PRED)
-print("#@#"*30)
-
-def vect2email(dictionary, vect):
-    index = [i for i, x in enumerate(vect) if x == 1]
-    inv_dictionary = {v: k for k, v in dictionary.items()}
-    email_list = []
-    for i in index:
-        email_list.append(inv_dictionary[i])
-    return(email_list)
     
 email_dictionary = x_expediteurs_vector_keyword.vectorKeywordIndex
 print(email_dictionary)
 
-email_vect = vect2email(email_dictionary, y_PRED)
-print(email_dictionary)
-print("#@#"*30)
-print(email_vect)
+y_PRED = []
+email_pred = []
 
+"""
+        ¡¡¡ ATENTION: !!!
 
-#X, Y = make_multilabel_classification(n_classes=2, n_labels=1,                                     allow_unlabeled=False, random_state=1)
+        CHANGER LE 4 ON BAS POUR LEN(X_TEST) pour le depot final
+"""
+for i in range(4):
+    pred = classif.predict(X_TEST[i].reshape(1,-1))
+    pred = pred.tolist()[0]
+    y_PRED.append(pred)
+    #print(pred)
+    email_pred.append(vect2email(email_dictionary, pred))
+    print(str(y_id_list[i]) + ", " + str(email_pred[i]))
+    
+
 
 """
 pd = pandas.DataFrame(id_list, date_list, destinataires_list, body_clean_list)
 pd.to_csv("out.csv")
 """                                         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

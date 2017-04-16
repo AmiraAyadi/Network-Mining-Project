@@ -38,9 +38,10 @@ class DocTransformer:
         string = string.lower()
         return string
     
-    def tokenise(self, string):
+    def tokenise(self, string, clean=True):
         """ break string up into tokens and stem words """
-        string = self.clean(string)
+        if(clean):
+            string = self.clean(string)
         words = string.split()
         return [stem(word) for word in words]
         #2/Stoplist
@@ -49,12 +50,12 @@ class DocTransformer:
         """ Remove common words which have no search value """
         return [word for word in list if word not in self.stopwords ]
     
-    def getVectorKeywordIndex(self, documentList):
+    def getVectorKeywordIndex(self, documentList, clean=True):
         """ create the keyword associated to the position of the elements within the document vectors """
         #Mapped documents into a single word string
         vocabularyString = " ".join(documentList)
 
-        vocabularyList = self.tokenise(vocabularyString)
+        vocabularyList = self.tokenise(vocabularyString, clean)
         #Remove common words which have no search value
         vocabularyList = self.removeStopWords(vocabularyList)
         #Supprime les mots multiples
