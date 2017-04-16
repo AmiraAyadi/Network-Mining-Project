@@ -17,6 +17,10 @@ class DocTransformer:
     def __init__(self):
         self.stopwords= open('./doc/SmartStoplist.txt','r').read().split()
         
+    def printVectorKeywordIndex(self):
+        print(self.vectorKeywordIndex)
+    
+    
     #1/Tronquer les mots (stemming)
     def clean(self, string):
         string = string.replace(".","")
@@ -28,6 +32,7 @@ class DocTransformer:
         string = string.replace(","," ")
         string = string.replace("/"," ")
         string = string.replace(r"_"," ")
+        string = string.replace(r"['"," ")
         string = re.sub(r"[0-9]","",string)
         string = string.replace("\s+"," ")
         string = string.lower()
@@ -65,6 +70,7 @@ class DocTransformer:
         return vectorIndex  #(keyword:position)
     #4/tf-idf et creer les vecteurs
     #Va renvoyer un vecteur avec le score de chaque terme
+    
     def makeVector(self, wordString):
         #Initialise vector with 0's
         vector = [0] * len(self.vectorKeywordIndex)
@@ -74,8 +80,7 @@ class DocTransformer:
         for word in wordList:
                 vector[self.vectorKeywordIndex[word]] += 1/N; #Use simple Term Count Model
         return vector
-
-
+    
     def matrixVector(self, documents):
         """ Create the vector space for the passed document strings """
         matrix = [self.makeVector(document) for document in documents]

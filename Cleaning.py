@@ -95,10 +95,19 @@ dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(), e
 tfidf_maker_body.getVectorKeywordIndex(documents)
 tfidf_maker_body.matrixVector(documents)
 tfidf_maker_expediteurs.getVectorKeywordIndex(expediteurs)
-tfidf_maker_expediteurs.matrixVector(expediteurs)
+expediteurs_vector_keyword = tfidf_maker_expediteurs
+#{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
 
+
+print(expediteurs)
+print("#"*20)
+tfidf_maker_expediteurs.printVectorKeywordIndex()
+print(tfidf_maker_expediteurs.vectorKeywordIndex["monicahanley@univ"])
+
+tfidf_maker_expediteurs.matrixVector(expediteurs)
 matrix_tfidf_body = tfidf_maker_body.documentVectors
-matrix_tfidf_expediteurs = tfidf_maker_expediteurs.documentVectors
+matrix_tfidf_expediteurs_doc = tfidf_maker_expediteurs.documentVectors
+
 
 #for row in matrix_tfidf_expediteurs:
 #    print(row)
@@ -107,9 +116,9 @@ matrix_tfidf_expediteurs = tfidf_maker_expediteurs.documentVectors
 #print("########")
 matrix_data = []
 for i in range(len(matrix_tfidf_body)):
-    matrix_data.append(np.concatenate((matrix_tfidf_body[i],matrix_tfidf_expediteurs[i],dates[i])))
+    matrix_data.append(np.concatenate((matrix_tfidf_body[i],matrix_tfidf_expediteurs_doc[i],dates[i])))
 
-print(matrix_data[1])
+#print(matrix_data[1])
 
 
 
