@@ -72,10 +72,10 @@ class DocTransformer:
     #4/tf-idf et creer les vecteurs
     #Va renvoyer un vecteur avec le score de chaque terme
     
-    def makeVector(self, wordString):
+    def makeVector(self, wordString, clean=True):
         #Initialise vector with 0's
         vector = [0] * len(self.vectorKeywordIndex)
-        wordList = self.tokenise(wordString)
+        wordList = self.tokenise(wordString, clean)
         wordList = self.removeStopWords(wordList)
         N = len(wordString)+1 #+1 POUR EVITER DIVISION ENTRE 0
         for word in wordList:
@@ -88,9 +88,9 @@ class DocTransformer:
                     continue
         return vector
     
-    def matrixVector(self, documents):
+    def matrixVector(self, documents, clean=True):
         """ Create the vector space for the passed document strings """
-        matrix = [self.makeVector(document) for document in documents]
+        matrix = [self.makeVector(document, clean) for document in documents]
         transformer = TfidfTransformer(smooth_idf=True)
         tfidf = transformer.fit_transform(matrix)       
         self.documentVectors = tfidf.toarray().tolist()

@@ -24,14 +24,16 @@ def vect2email(dictionary, vect):
 training_info_sid_min.csv C'est un fichier qui est un extrait du fichier training_info_sid.csv
 On l'a fait pour minimiser les temps du execution
 """
-f = open('./Datasets/new_training_info_min.csv', 'r')
+
+print("reading datasets...")
+f = open('./Datasets/new_training_info.csv', 'r')
 t = open('./Datasets/new_test_info.csv', 'r')
 
 reader_train = csv.reader(f, delimiter=',', quotechar='"')
 reader_test = csv.reader(t, delimiter=',', quotechar='"')
 steamer = DocTransformer()
 
-
+print("init data...")
 """
 On mettre le text brut du fichier CSV (colonne 2) dans une list (body_list)
 """
@@ -127,6 +129,7 @@ for i in range(0,len(y_date_list)):
 """
 Initialisation des emails TRAIN
 """
+print("init emails...")
 x_email_list = []    
 for i in range(0,len(x_id_list)):
     x_email_list.append(Email(ID_mail=x_id_list[i], text=x_body_list[i], date=datetime.date(x_year_date_list[i],x_month_date_list[i],x_day_date_list[i]), destinataires=x_destinataires_list[i],expediteurs=x_expediteurs_list[i].split()))
@@ -139,6 +142,7 @@ y_email_list = []
 for i in range(0,len(y_id_list)):
     y_email_list.append(Email(ID_mail=y_id_list[i], text=y_body_list[i], date=datetime.date(y_year_date_list[i],y_month_date_list[i],y_day_date_list[i]), destinataires=None,expediteurs=y_expediteurs_list[i].split()))    
 
+print("nettoyage des emails...")
 """
 Nettoyage des emails TRAIN (le text nettoyé s'est mis sur email.tokenise comme un vecteur des mots)
 """
@@ -159,7 +163,7 @@ for email in y_email_list:
 """
 Initialisation pour TFIDF TRAIN:
 """
-
+print("TFIDF TRAIN...")
 x_tfidf_maker_body = DocTransformer()
 x_tfidf_maker_expediteurs = DocTransformer()
 x_tfidf_maker_destinataires = DocTransformer()
@@ -186,8 +190,8 @@ x_destinataires_vector_keyword = x_tfidf_maker_destinataires #Rename
 Making vectors
 """
 x_tfidf_maker_body.matrixVector(x_documents)
-x_tfidf_maker_expediteurs.matrixVector(x_expediteurs)
-x_tfidf_maker_destinataires.matrixVector(x_destinataires)
+x_tfidf_maker_expediteurs.matrixVector(x_expediteurs, clean=False)
+x_tfidf_maker_destinataires.matrixVector(x_destinataires, clean=False)
 
 x_matrix_tfidf_body = x_tfidf_maker_body.documentVectors
 x_matrix_tfidf_expediteurs = x_tfidf_maker_expediteurs.documentVectors
@@ -207,7 +211,7 @@ for i in range(len(x_matrix_tfidf_body)):
 """
 Initialisation pour TFIDF TEST:
 """
-
+print("TFIDF TEST...")
 y_tfidf_maker_body = DocTransformer()
 y_tfidf_maker_destinataires = DocTransformer()
 
@@ -221,7 +225,7 @@ y_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(),
 Same vocabulary than in train step (Making new vectors):
 """
 x_tfidf_maker_body.matrixVector(y_documents)
-x_tfidf_maker_expediteurs.matrixVector(y_expediteurs)
+x_tfidf_maker_expediteurs.matrixVector(y_expediteurs, clean=False)
 
 """
 Taking test data vectors
@@ -241,6 +245,7 @@ for i in range(len(y_matrix_tfidf_body)):
 """
 #MACHINE LEARNING TRAININ STEP
 """
+print("MACHINE LEARNIGN TRAINING...")
 from sklearn import svm
 from sklearn.svm import SVC
 from sklearn.multiclass import OneVsRestClassifier
@@ -251,13 +256,17 @@ y = x_matrix_class
 
 X = np.array(X)
 y = np.array(y)
-for h in range(len(y)):
-    print([i for i, x in enumerate(y[h]) if x == 1])
 
 binarizer = preprocessing.Binarizer()
 y = binarizer.transform(y)
+"""
+for h in range(len(y)):
+    print(sum(y[h]))
+"""
 
-classif = OneVsRestClassifier(SVC(kernel='linear'))
+print("OneVsRestClassifierSVC")
+classif = OneVsRestClassifier(SVC(kernel='linear'), n_jobs=-1)
+print("FITTING...")
 classif.fit(X, y)
 
 print("Classif Fit [OK]")
@@ -266,11 +275,13 @@ print("Classif Fit [OK]")
 #MACHINE LEARNING TEST STEP
 """
 
+print("MACHINE LEARNING TEST...")
+
 X_TEST = y_matrix_data
 X_TEST = np.array(X_TEST)
     
 email_dictionary = x_expediteurs_vector_keyword.vectorKeywordIndex
-print(email_dictionary)
+#print(email_dictionary)
 
 y_PRED = []
 email_pred = []
@@ -280,7 +291,11 @@ email_pred = []
 
         CHANGER LE 4 ON BAS POUR LEN(X_TEST) pour le depot final
 """
-for i in range(4):
+
+
+print("id, recipients")
+
+for i in range(len(X_TEST)):
     pred = classif.predict(X_TEST[i].reshape(1,-1))
     pred = pred.tolist()[0]
     y_PRED.append(pred)
