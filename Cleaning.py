@@ -167,11 +167,14 @@ x_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(),
 Taken vocabulary
 """
 x_tfidf_maker_body.getVectorKeywordIndex(x_documents)
-x_tfidf_maker_expediteurs.getVectorKeywordIndex(x_expediteurs)
-x_tfidf_maker_destinataires.getVectorKeywordIndex(x_destinataires)
+x_tfidf_maker_expediteurs.getVectorKeywordIndex(x_expediteurs + x_destinataires)
+x_tfidf_maker_destinataires.getVectorKeywordIndex(x_expediteurs + x_destinataires)
 x_expediteurs_vector_keyword = x_tfidf_maker_expediteurs #Rename
 #{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
-
+x_destinataires_vector_keyword = x_tfidf_maker_destinataires #Rename
+#print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+#print(x_destinataires_vector_keyword.vectorKeywordIndex)
+#print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 """
 Making vectors
 """
@@ -199,7 +202,7 @@ Initialisation pour TFIDF TEST:
 """
 
 y_tfidf_maker_body = DocTransformer()
-y_tfidf_maker_expediteurs = DocTransformer()
+y_tfidf_maker_destinataires = DocTransformer()
 
 y_documents = [email.text  for email in y_email_list]
 y_expediteurs = [str(email.expediteurs) for email in y_email_list]
@@ -241,7 +244,10 @@ y = x_matrix_class
 
 X = np.array(X)
 y = np.array(y)
-    
+print("#######################")
+print("len(y[1])")
+print(len(y[1]))
+print("#######################")
 binarizer = preprocessing.Binarizer()
 y = binarizer.transform(y)
 
