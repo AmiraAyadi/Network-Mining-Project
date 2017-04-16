@@ -58,6 +58,7 @@ for row in reader_train:
     x_body_list.append(row[2+C])
     x_destinataires_list.append(row[3+C])
     x_expediteurs_list.append(row[4+C])
+
 #TEST
 for row in reader_test:
     y_id_list.append(row[0+C])
@@ -127,14 +128,6 @@ for i in range(0,len(x_id_list)):
 Initialisation des emails TEST
 """
 y_email_list = []
-print(len(y_id_list))
-print(len(y_body_list))
-print(len(y_year_date_list))
-print(len(y_month_date_list))
-print(len(y_day_date_list))
-print(len(y_month_date_list))
-print(len(y_expediteurs_list))
-
 
 for i in range(0,len(y_id_list)):
     y_email_list.append(Email(ID_mail=y_id_list[i], text=y_body_list[i], date=datetime.date(y_year_date_list[i],y_month_date_list[i],y_day_date_list[i]), destinataires=None,expediteurs=y_expediteurs_list[i].split()))    
@@ -170,15 +163,20 @@ x_destinataires = [str(email.destinataires) for email in x_email_list]
 x_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(), email.date[0].day] for email in x_email_list]
 #print(x_dates)
 
+"""
+Taken vocabulary
+"""
 x_tfidf_maker_body.getVectorKeywordIndex(x_documents)
-x_tfidf_maker_body.matrixVector(x_documents)
-
 x_tfidf_maker_expediteurs.getVectorKeywordIndex(x_expediteurs)
-x_expediteurs_vector_keyword = x_tfidf_maker_expediteurs
-#{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
-x_tfidf_maker_expediteurs.matrixVector(x_expediteurs)
-
 x_tfidf_maker_destinataires.getVectorKeywordIndex(x_destinataires)
+x_expediteurs_vector_keyword = x_tfidf_maker_expediteurs #Rename
+#{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
+
+"""
+Making vectors
+"""
+x_tfidf_maker_body.matrixVector(x_documents)
+x_tfidf_maker_expediteurs.matrixVector(x_expediteurs)
 x_tfidf_maker_destinataires.matrixVector(x_destinataires)
 
 x_matrix_tfidf_body = x_tfidf_maker_body.documentVectors
@@ -208,25 +206,25 @@ y_expediteurs = [str(email.expediteurs) for email in y_email_list]
 y_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(), email.date[0].day] for email in y_email_list]
 #print(dates)
 
-y_tfidf_maker_body.getVectorKeywordIndex(y_documents)
-y_tfidf_maker_body.matrixVector(y_documents)
 
-y_tfidf_maker_expediteurs.getVectorKeywordIndex(y_expediteurs)
-y_expediteurs_vector_keyword = y_tfidf_maker_expediteurs
-#{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
-y_tfidf_maker_expediteurs.matrixVector(y_expediteurs)
+"""
+Same vocabulary than in train step (Making new vectors):
+"""
+x_tfidf_maker_body.matrixVector(y_documents)
+x_tfidf_maker_expediteurs.matrixVector(y_expediteurs)
 
-y_matrix_tfidf_body = y_tfidf_maker_body.documentVectors
-y_matrix_tfidf_expediteurs = y_tfidf_maker_expediteurs.documentVectors
+"""
+Taking test data vectors
+"""
+y_matrix_tfidf_body = x_tfidf_maker_body.documentVectors
+y_matrix_tfidf_expediteurs = x_tfidf_maker_expediteurs.documentVectors
 
 y_matrix_data = []
-y_matrix_class = []
 for i in range(len(y_matrix_tfidf_body)):
     y_matrix_data.append(np.concatenate((y_matrix_tfidf_body[i],y_matrix_tfidf_expediteurs[i],y_dates[i])))
 #print(y_matrix_data[1])
-#print("#@"*40)
-#print(y_matrix_class[1])
 #[    0.     0.     0. ...,  2012.     3.    12.]
+#print("#@"*40)
 
 
 
@@ -250,23 +248,40 @@ y = binarizer.transform(y)
 classif = OneVsRestClassifier(SVC(kernel='linear'))
 classif.fit(X, y)
 
+print("Classif Fit [OK]")
+
 """
 #MACHINE LEARNING TEST STEP
 """
 
 X_TEST = y_matrix_data
-y_TEST = y_matrix_class
+X_TEST = np.array(X_TEST)
 
-y_TEST = binarizer.transform(y_TEST)
 print(X_TEST[1])
 
-print("realidad")
-print(y_TEST[1])
 print("prediccion")
 y_PRED = classif.predict(X_TEST[1].reshape(1,-1))
 print(y_PRED)
-print(sum(y_TEST[1] - y_PRED))
+print("#@#"*30)
+print(type(y_PRED))
+y_PRED = y_PRED.tolist()
+y_PRED = y_PRED[0]
+print(y_PRED)
+print("#@#"*30)
 
+def vect2email(dictionary, vect):
+    index = [i for i, x in enumerate(vect) if x == 1]
+    inv_dictionary = {v: k for k, v in dictionary.items()}
+    email_list = ivd = {v: k for k, v in d.items()}
+
+    
+email_dictionary = x_expediteurs_vector_keyword.vectorKeywordIndex
+print(type(email_dictionary))
+
+email_vect = vect2email(email_dictionary, y_PRED)
+print(email_dictionary)
+print("#@#"*30)
+print(email_vect)
 
 
 #X, Y = make_multilabel_classification(n_classes=2, n_labels=1,                                     allow_unlabeled=False, random_state=1)

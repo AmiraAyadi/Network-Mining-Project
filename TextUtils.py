@@ -78,7 +78,13 @@ class DocTransformer:
         wordList = self.removeStopWords(wordList)
         N = len(wordString)+1 #+1 POUR EVITER DIVISION ENTRE 0
         for word in wordList:
-                vector[self.vectorKeywordIndex[word]] += 1/N; #Use simple Term Count Model
+                """
+                Sometimes word is not in vectorKeywordIndex, so we jump it
+                """
+                try:
+                    vector[self.vectorKeywordIndex[word]] += 1/N; #Use simple Term Count Model
+                except KeyError:
+                    continue
         return vector
     
     def matrixVector(self, documents):
