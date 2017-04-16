@@ -6,8 +6,11 @@ import re
 
 destina=[]
 mail=[]
-training_info_sid = pd.read_csv('./Datasets/training_info_sid.csv',header=None)
-training_set = pd.read_csv('./Datasets/training_set_sid.csv',header=None)
+#training_info_sid = pd.read_csv('./Datasets/training_info_sid.csv',header=None)
+#training_set = pd.read_csv('./Datasets/training_set_sid.csv',header=None)
+training_info_sid = pd.read_csv('./Datasets/test_info_sid.csv',header=None)
+training_set = pd.read_csv('./Datasets/test_set_sid.csv',header=None)
+
 
 df=training_info_sid.copy()
 
@@ -23,7 +26,7 @@ for i in range(len(destina)):
                 df.set_value(a, 4,mail[i][0] )
 
                 
-df.to_csv('new_training_info.csv', sep=',', header=False, index = False)
+df.to_csv('new_test_info.csv', sep=',', header=False, index = False)
 
 
     
