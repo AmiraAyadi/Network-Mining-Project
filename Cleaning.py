@@ -18,7 +18,7 @@ training_info_sid_min.csv C'est un fichier qui est un extrait du fichier trainin
 On l'a fait pour minimiser les temps du execution
 """
 f = open('./Datasets/new_training_info_min.csv', 'r')
-t = open('./Datasets/new_training_info_min.csv', 'r')
+t = open('./Datasets/new_test_info.csv', 'r')
 
 reader_train = csv.reader(f, delimiter=',', quotechar='"')
 reader_test = csv.reader(t, delimiter=',', quotechar='"')
@@ -63,10 +63,9 @@ for row in reader_test:
     y_id_list.append(row[0+C])
     y_date_list.append(row[1+C])
     y_body_list.append(row[2+C])
-    y_destinataires_list.append(row[3+C])
-    y_expediteurs_list.append(row[4+C])
+    y_expediteurs_list.append(row[3+C])
 
-    
+
 
 #(DATE TRAIN)
 """
@@ -103,11 +102,12 @@ y_day_date_list = []
 y_weekday_date_list = []
 for i in range(0,len(y_date_list)):
     #DEBUG
-    #print(str(id_list[i]), " ") 
-    #print(date_list[i]) 
+    #print(str(y_id_list[i]), " ") 
+    #print(y_date_list[i]) 
     
     #If there's not date
     if(y_date_list[i] == ""):
+        print(i)
         continue
         
     dt = parse(y_date_list[i])
@@ -126,9 +126,18 @@ for i in range(0,len(x_id_list)):
 """
 Initialisation des emails TEST
 """
-y_email_list = []    
+y_email_list = []
+print(len(y_id_list))
+print(len(y_body_list))
+print(len(y_year_date_list))
+print(len(y_month_date_list))
+print(len(y_day_date_list))
+print(len(y_month_date_list))
+print(len(y_expediteurs_list))
+
+
 for i in range(0,len(y_id_list)):
-    y_email_list.append(Email(ID_mail=y_id_list[i], text=y_body_list[i], date=datetime.date(y_year_date_list[i],y_month_date_list[i],y_day_date_list[i]), destinataires=y_destinataires_list[i],expediteurs=y_expediteurs_list[i].split()))    
+    y_email_list.append(Email(ID_mail=y_id_list[i], text=y_body_list[i], date=datetime.date(y_year_date_list[i],y_month_date_list[i],y_day_date_list[i]), destinataires=None,expediteurs=y_expediteurs_list[i].split()))    
 
 """
 Nettoyage des emails TRAIN (le text nettoyé s'est mis sur email.tokenise comme un vecteur des mots)
@@ -188,16 +197,14 @@ for i in range(len(x_matrix_tfidf_body)):
 #[    0.     0.     0. ...,  2012.     3.    12.]
 
 """
-Initialisation pour TFIDF TRAIN:
+Initialisation pour TFIDF TEST:
 """
 
 y_tfidf_maker_body = DocTransformer()
 y_tfidf_maker_expediteurs = DocTransformer()
-y_tfidf_maker_destinataires = DocTransformer()
 
 y_documents = [email.text  for email in y_email_list]
 y_expediteurs = [str(email.expediteurs) for email in y_email_list]
-y_destinataires = [str(email.destinataires) for email in y_email_list]
 y_dates = [[email.date[0].month, email.date[0].year, email.date[0].isoweekday(), email.date[0].day] for email in y_email_list]
 #print(dates)
 
@@ -209,19 +216,13 @@ y_expediteurs_vector_keyword = y_tfidf_maker_expediteurs
 #{'richardverma@univ': 0, 'burnsstrider@univ': 1, ... ,'danielschwerin@univ': 24}
 y_tfidf_maker_expediteurs.matrixVector(y_expediteurs)
 
-y_tfidf_maker_destinataires.getVectorKeywordIndex(y_destinataires)
-y_tfidf_maker_destinataires.matrixVector(y_destinataires)
-
 y_matrix_tfidf_body = y_tfidf_maker_body.documentVectors
 y_matrix_tfidf_expediteurs = y_tfidf_maker_expediteurs.documentVectors
-y_matrix_tfidf_destinataires = y_tfidf_maker_destinataires.documentVectors
-
 
 y_matrix_data = []
 y_matrix_class = []
 for i in range(len(y_matrix_tfidf_body)):
     y_matrix_data.append(np.concatenate((y_matrix_tfidf_body[i],y_matrix_tfidf_expediteurs[i],y_dates[i])))
-    y_matrix_class.append(y_matrix_tfidf_destinataires[i])
 #print(y_matrix_data[1])
 #print("#@"*40)
 #print(y_matrix_class[1])
