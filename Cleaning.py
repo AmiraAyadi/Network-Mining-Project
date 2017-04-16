@@ -9,6 +9,8 @@ from emails import *
 import datetime
 from dateutil.parser import *
 from TextUtils import *
+
+
 #dt = parser.parse("Aug 28 1999 12:00AM")
 
 """
@@ -110,23 +112,47 @@ matrix_tfidf_body = tfidf_maker_body.documentVectors
 matrix_tfidf_expediteurs = tfidf_maker_expediteurs.documentVectors
 matrix_tfidf_destinataires = tfidf_maker_destinataires.documentVectors
 
-tfidf_maker_destinataires.printVectorKeywordIndex()
-
+#tfidf_maker_destinataires.printVectorKeywordIndex()
+"""
 for row in matrix_tfidf_destinataires:
     print(row)
-#print(sum(matrix_tfidf_body[1]))
-#print(sum(matrix_tfidf_destinataires[1]))
+print(sum(matrix_tfidf_body[1]))
+print(sum(matrix_tfidf_destinataires[1]))
 print("########")
 
+"""
 
 matrix_data = []
 matrix_class = []
 for i in range(len(matrix_tfidf_body)):
     matrix_data.append(np.concatenate((matrix_tfidf_body[i],matrix_tfidf_expediteurs[i],dates[i])))
-
-print(matrix_data[1])
+    matrix_class.append(matrix_tfidf_destinataires[i])
+#print(matrix_data[1])
+#print("#@"*40)
+#print(matrix_class[1])
 #[    0.     0.     0. ...,  2012.     3.    12.]
 
+
+
+#MACHINE LEARNING STEP
+from sklearn import svm
+from sklearn.svm import SVC
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn import preprocessing
+
+X = matrix_data
+y = matrix_class
+
+X = np.array(X)
+y = np.array(y)
+    
+binarizer = preprocessing.Binarizer()
+y = binarizer.transform(y)
+
+classif = OneVsRestClassifier(SVC(kernel='linear'))
+classif.fit(X, y)
+
+#X, Y = make_multilabel_classification(n_classes=2, n_labels=1,                                     allow_unlabeled=False, random_state=1)
 
 
 
