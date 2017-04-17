@@ -286,13 +286,6 @@ email_dictionary = x_expediteurs_vector_keyword.vectorKeywordIndex
 y_PRED = []
 email_pred = []
 
-"""
-        ¡¡¡ ATENTION: !!!
-
-        CHANGER LE 4 ON BAS POUR LEN(X_TEST) pour le depot final
-"""
-
-
 print("id, recipients")
 
 for i in range(len(X_TEST)):
